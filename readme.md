@@ -39,3 +39,4 @@ Zewnętrzny komponent **ESPHome** dla radaru **Seeed Studio MR24FDB1** (UART), k
 
 Skopiuj folder `components/` do katalogu projektu ESPHome (obok pliku `your_node.yaml`), zachowując strukturę:
 
+![MR24FDB1 on ESP32](./mr24fdb1.jpg)
