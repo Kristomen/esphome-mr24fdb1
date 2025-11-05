@@ -1,0 +1,66 @@
+esphome:
+  name: esp32-mr24fdb1
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+logger:
+  level: DEBUG
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_pass
+
+api:
+ota:
+captive_portal:
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [mr24fdb1]
+
+uart:
+  id: radar_uart
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+  parity: NONE
+  stop_bits: 1
+  debug:
+    direction: RX
+    after: { timeout: 80ms }
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ' ');  # 3 parametry, patrz API
+#                                                                                   ^ separator
+# Uwaga: podpis funkcji UARTDebug::log_hex to (direction, bytes, separator) — 3 argumenty. :contentReference[oaicite:8]{index=8}
+
+mr24fdb1:
+  uart_id: radar_uart
+
+  # encje binarne
+  presence:
+    name: "MR24FDB1 Presence"
+    device_class: occupancy
+  fall:
+    name: "MR24FDB1 Fall Detected"
+    device_class: safety
+
+  # encje tekstowe (diagnostyka / UI)
+  state:
+    name: "MR24FDB1 Raw State"
+  environment_triplet:
+    name: "MR24FDB1 Environment Triplet"
+  environment_label:
+    name: "MR24FDB1 Environment Label"
+  approach_state:
+    name: "MR24FDB1 Approach/Away"
+  fall_state:
+    name: "MR24FDB1 Fall State"
+
+  # encja liczbowa (aktywność 0..100)
+  sign_parameter:
+    name: "MR24FDB1 Sign Parameter"
